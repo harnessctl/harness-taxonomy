@@ -5,24 +5,186 @@
     "coding": {
       "weight": 1.0,
       "concepts": {
-        "solid": ["liskov", "dependency inversion", "single responsibility", "open-closed", "interface segregation"],
-        "patterns": ["saga", "circuit breaker", "singleton", "factory", "repository", "cqrs", "event sourcing"],
-        "languages": ["python", "rust", "mojo", "zig", "go", "typescript", "c++", "c#", "java"]
+        "solid": [
+          "liskov",
+          "dependency inversion",
+          "single responsibility",
+          "open-closed",
+          "interface segregation"
+        ],
+        "patterns": [
+          "saga",
+          "circuit breaker",
+          "singleton",
+          "factory",
+          "repository",
+          "cqrs",
+          "event sourcing"
+        ],
+        "languages": [
+          "python",
+          "rust",
+          "mojo",
+          "zig",
+          "go",
+          "typescript",
+          "c++",
+          "c#",
+          "java"
+        ]
       }
     },
     "reasoning": {
       "weight": 0.8,
       "concepts": {
-        "logic": ["first-order", "propositional", "predicate", "boolean"],
-        "algorithms": ["dijkstra", "a*", "minimax", "dynamic programming", "backtracking", "greedy"]
+        "logic": [
+          "first-order",
+          "propositional",
+          "predicate",
+          "boolean"
+        ],
+        "algorithms": [
+          "dijkstra",
+          "a*",
+          "minimax",
+          "dynamic programming",
+          "backtracking",
+          "greedy"
+        ]
       }
     },
     "infrastructure": {
       "weight": 0.9,
       "concepts": {
-        "orchestration": ["kubernetes", "docker swarm", "nomad", "mesos"],
-        "iac": ["terraform", "opentofu", "pulumi", "cloudformation", "ansible"],
-        "ci_cd": ["github actions", "gitlab ci", "jenkins", "argocd", "flux"]
+        "orchestration": [
+          "kubernetes",
+          "docker swarm",
+          "nomad",
+          "mesos"
+        ],
+        "iac": [
+          "terraform",
+          "opentofu",
+          "pulumi",
+          "cloudformation",
+          "ansible"
+        ],
+        "ci_cd": [
+          "github actions",
+          "gitlab ci",
+          "jenkins",
+          "argocd",
+          "flux"
+        ]
+      }
+    },
+    "trending": {
+      "weight": 0.7,
+      "concepts": {
+        "stack_overflow": [
+          ".net",
+          "ajax",
+          "android",
+          "angular",
+          "angularjs",
+          "arrays",
+          "asp.net",
+          "asp.net-mvc",
+          "c",
+          "c#",
+          "c++",
+          "css",
+          "database",
+          "django",
+          "excel",
+          "flutter",
+          "html",
+          "ios",
+          "iphone",
+          "java",
+          "javascript",
+          "jquery",
+          "json",
+          "laravel",
+          "linux",
+          "mongodb",
+          "mysql",
+          "node.js",
+          "objective-c",
+          "pandas",
+          "php",
+          "postgresql",
+          "python",
+          "python-3.x",
+          "r",
+          "reactjs",
+          "regex",
+          "ruby",
+          "ruby-on-rails",
+          "spring",
+          "sql",
+          "sql-server",
+          "string",
+          "swift",
+          "typescript",
+          "vba",
+          "windows",
+          "wordpress",
+          "wpf",
+          "xcode"
+        ],
+        "github": [
+          "hacktoberfest",
+          "ai",
+          "typescript",
+          "javascript",
+          "python",
+          "machine-learning",
+          "database",
+          "linux",
+          "php",
+          "ai-agents",
+          "mcp",
+          "analytics",
+          "android",
+          "llm",
+          "framework",
+          "no-code",
+          "docker-image",
+          "compiler",
+          "deep-learning",
+          "cli",
+          "security-tools",
+          "electron",
+          "c-plus-plus",
+          "home-assistant",
+          "postgresql",
+          "computer-vision",
+          "low-code",
+          "pytorch",
+          "tensorflow",
+          "dashboard",
+          "slack",
+          "docker",
+          "linux-distribution",
+          "packages",
+          "termux",
+          "template-engine",
+          "template-language",
+          "templating",
+          "twig",
+          "jetpack",
+          "library",
+          "nix",
+          "nixos",
+          "nixpkgs",
+          "ai-crawler",
+          "ai-scraping",
+          "ai-search",
+          "crawler",
+          "data-extraction",
+          "html-to-markdown"
+        ]
       }
     }
   }
