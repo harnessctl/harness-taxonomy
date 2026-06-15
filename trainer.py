@@ -3,21 +3,26 @@ import httpx
 from collections import Counter
 from pathlib import Path
 import sys
+import time
 
-def fetch_so_tags():
-    print("Fetching StackOverflow tags...")
-    url = "https://api.stackexchange.com/2.3/tags?pagesize=50&order=desc&sort=popular&site=stackoverflow"
-    try:
-        response = httpx.get(url, timeout=10.0)
-        response.raise_for_status()
-        return [item["name"] for item in response.json().get("items", [])]
-    except Exception as e:
-        print(f"Failed to fetch SO tags: {e}")
-        return []
+def fetch_so_tags(pages=5):
+    print(f"Fetching {pages*100} StackOverflow tags...")
+    tags = []
+    for page in range(1, pages + 1):
+        url = f"https://api.stackexchange.com/2.3/tags?page={page}&pagesize=100&order=desc&sort=popular&site=stackoverflow"
+        try:
+            response = httpx.get(url, timeout=10.0)
+            response.raise_for_status()
+            tags.extend([item["name"] for item in response.json().get("items", [])])
+            time.sleep(0.5) # respect rate limit slightly
+        except Exception as e:
+            print(f"Failed to fetch SO tags on page {page}: {e}")
+            break
+    return tags
 
 def fetch_github_topics():
     print("Fetching GitHub popular topics...")
-    url = "https://api.github.com/search/repositories?q=stars:>5000&sort=updated&order=desc&per_page=50"
+    url = "https://api.github.com/search/repositories?q=stars:>5000&sort=updated&order=desc&per_page=100"
     headers = {
         "Accept": "application/vnd.github.v3+json", 
         "User-Agent": "Harness-Taxonomy-Bot"
@@ -29,14 +34,14 @@ def fetch_github_topics():
         for repo in response.json().get("items", []):
             for topic in repo.get("topics", []):
                 topic_counter[topic] += 1
-        return [topic for topic, count in topic_counter.most_common(50)]
+        return [topic for topic, count in topic_counter.most_common(100)]
     except Exception as e:
         print(f"Failed to fetch GH topics: {e}")
         return []
 
 def train():
-    so_tags = fetch_so_tags()
-    gh_topics = fetch_github_topics()
+    so_tags = fetch_so_tags(pages=5) # Fetches top 500 tags
+    gh_topics = fetch_github_topics() # Fetches up to 100 topics
     
     tax_path = Path("taxonomy.json")
     if not tax_path.exists():
