@@ -4,18 +4,28 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'taxonomy.json'
-  workflow_dispatch: {}
 
 jobs:
-  build-and-release:
+  release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      issues: write
+      pull-requests: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Install uv
         uses: astral-sh/setup-uv@v3
@@ -27,31 +37,7 @@ jobs:
         with:
           python-version-file: 'pyproject.toml'
 
-      - name: Build msgpack.zst
-        run: uv run build.py
-
-      - name: Generate tag
-        id: tag
-        run: |
-          VERSION=$(grep -oP '"version": "\K[^"]+' taxonomy.json)
-          DATE=$(date -u +"%Y%m%d%H%M%S")
-          echo "TAG_NAME=v${VERSION}-${DATE}" >> $GITHUB_OUTPUT
-
-      - name: Release Latest
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: latest
-          name: Latest Taxonomy
-          files: |
-            taxonomy.msgpack.zst
-            taxonomy_terms.tar.gz
-          make_latest: true
-          
-      - name: Release Versioned
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ steps.tag.outputs.TAG_NAME }}
-          name: Release ${{ steps.tag.outputs.TAG_NAME }}
-          files: |
-            taxonomy.msgpack.zst
-            taxonomy_terms.tar.gz
+      - name: Semantic Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release

@@ -1,0 +1,11 @@
+{
+  "name": "harness-taxonomy",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "semantic-release": "^23.1.1",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/exec": "^6.0.3",
+    "@semantic-release/github": "^10.0.3"
+  }
+}
