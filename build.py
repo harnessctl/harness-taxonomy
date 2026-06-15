@@ -3,6 +3,7 @@ import msgpack
 import zstandard as zstd
 from datetime import datetime, timezone
 import sys
+import tarfile
 from pathlib import Path
 
 
@@ -10,6 +11,7 @@ def build():
     input_file = Path("taxonomy.json")
     output_file = Path("taxonomy.msgpack.zst")
     terms_file = Path("taxonomy_terms.txt")
+    terms_tar_file = Path("taxonomy_terms.tar.gz")
 
     if not input_file.exists():
         print(f"Error: {input_file} not found.")
@@ -28,7 +30,12 @@ def build():
     with open(terms_file, "w") as f:
         for term in sorted(all_terms):
             f.write(f"{term}\n")
-    print(f"Successfully generated {terms_file} ({len(all_terms)} terms)")
+            
+    # Compress the terms file into a tar.gz
+    with tarfile.open(terms_tar_file, "w:gz") as tar:
+        tar.add(terms_file, arcname=terms_file.name)
+
+    print(f"Successfully generated {terms_tar_file} ({len(all_terms)} terms)")
 
     # Update timestamp
     data["last_updated"] = datetime.now(timezone.utc).isoformat()

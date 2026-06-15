@@ -44,7 +44,7 @@ jobs:
           name: Latest Taxonomy
           files: |
             taxonomy.msgpack.zst
-            taxonomy_terms.txt
+            taxonomy_terms.tar.gz
           make_latest: true
           
       - name: Release Versioned
@@ -54,4 +54,4 @@ jobs:
           name: Release ${{ steps.tag.outputs.TAG_NAME }}
           files: |
             taxonomy.msgpack.zst
-            taxonomy_terms.txt
+            taxonomy_terms.tar.gz
