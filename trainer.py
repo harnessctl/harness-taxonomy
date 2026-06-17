@@ -4,6 +4,7 @@ from collections import Counter
 from pathlib import Path
 import sys
 import time
+from datetime import datetime, timezone
 
 def fetch_so_tags(pages=5):
     print(f"Fetching {pages*100} StackOverflow tags...")
@@ -14,7 +15,7 @@ def fetch_so_tags(pages=5):
             response = httpx.get(url, timeout=10.0)
             response.raise_for_status()
             tags.extend([item["name"] for item in response.json().get("items", [])])
-            time.sleep(0.5) # respect rate limit slightly
+            time.sleep(0.5)
         except Exception as e:
             print(f"Failed to fetch SO tags on page {page}: {e}")
             break
@@ -40,8 +41,8 @@ def fetch_github_topics():
         return []
 
 def train():
-    so_tags = fetch_so_tags(pages=5) # Fetches top 500 tags
-    gh_topics = fetch_github_topics() # Fetches up to 100 topics
+    so_tags = fetch_so_tags(pages=5)
+    gh_topics = fetch_github_topics()
     
     tax_path = Path("taxonomy.json")
     if not tax_path.exists():
@@ -64,6 +65,9 @@ def train():
         taxonomy["categories"]["trending"]["concepts"]["stack_overflow"] = so_tags
     if gh_topics:
         taxonomy["categories"]["trending"]["concepts"]["github"] = gh_topics
+        
+    # Force a diff update so manual runs always trigger a commit/release
+    taxonomy["last_trained"] = datetime.now(timezone.utc).isoformat()
         
     with open(tax_path, "w") as f:
         json.dump(taxonomy, f, indent=2)

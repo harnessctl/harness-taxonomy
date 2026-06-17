@@ -1,4 +1,4 @@
-name: Train Taxonomy
+name: Scheduled Taxonomy Training
 
 on:
   schedule:
@@ -6,13 +6,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  train:
+  train-and-release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      pull-requests: write
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install uv
         uses: astral-sh/setup-uv@v3
@@ -25,13 +28,30 @@ jobs:
           python-version-file: "pyproject.toml"
 
       - name: Run Trainer
-        run: uv run trainer.py
+        run: |
+          uv pip install httpx
+          uv run trainer.py
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          commit-message: "chore: update taxonomy from live sources"
-          title: "Automated Taxonomy Training Update"
-          body: "This PR updates the taxonomy.json with the latest trending tags from StackOverflow and GitHub."
-          branch: "automated/train-taxonomy"
-          delete-branch: true
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Commit and Semantic Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # If trainer modified the JSON, commit it so semantic-release picks it up
+          if [[ -n $(git status -s taxonomy.json) ]]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add taxonomy.json
+            git commit -m "feat(data): automated weekly taxonomy expansion from live sources"
+            # Note: semantic-release will process this new commit and trigger a release
+            npx semantic-release
+          else
+            echo "No new trends found to update."
+          fi

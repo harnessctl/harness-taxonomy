@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+node_modules/
+.env.ai
+*.bak
+dist/
+.jscpd/
+.ruff_cache/
+.web_stash.db
+.ai.tmp
+taxonomy_terms.*
