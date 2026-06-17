@@ -41,3 +41,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
+
+      - name: Force Latest Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Ensure files exist before attempting release
+          if [[ -f "taxonomy.msgpack.zst" && -f "taxonomy_terms.tar.gz" ]]; then
+            # Delete old latest release and tag if they exist
+            gh release delete latest --cleanup-tag -y || true
+            # Create a new latest release with the freshly built files
+            gh release create latest taxonomy.msgpack.zst taxonomy_terms.tar.gz --title "Latest Release" --notes "Continuously updated latest alias." --latest
+          else
+            echo "Skipping latest update: No build artifacts found."
+          fi
