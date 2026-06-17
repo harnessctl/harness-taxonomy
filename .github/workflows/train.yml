@@ -50,7 +50,7 @@ jobs:
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
             git add taxonomy.json
-            git commit -m "feat(data): automated weekly taxonomy expansion from live sources"
+            git commit -m "fix(data): automated weekly taxonomy expansion from live sources"
             # Note: semantic-release will process this new commit and trigger a release
             npx semantic-release
           else
